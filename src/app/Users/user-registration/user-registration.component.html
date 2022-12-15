@@ -1,0 +1,128 @@
+<div class="container">
+  <form [formGroup]="UserRegistrationForm">
+    <div class="d-flex justify-content-center">
+      <h1 class="displayhead">Registration Form</h1>
+    </div>
+    <div class="inputfields">
+    <div class="row">
+      <div class="col-md-6 ">
+        <label class="form-label">First Name</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="firstname"
+          [class.is-invalid]="UserRegistrationForm.get('firstname')?.invalid &&
+                              (UserRegistrationForm.get('firstname')?.dirty ||
+                               UserRegistrationForm.get('firstname')?.touched)"/>
+        <div *ngIf="UserRegistrationForm.get('firstname')?.invalid &&
+                    (UserRegistrationForm.get('firstname')?.dirty ||
+                    UserRegistrationForm.get('firstname')?.touched)" class="errorMsg" >
+          <div *ngIf="UserRegistrationForm.get('firstname')?.errors?.['required']">
+          This field is required.
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 ">
+        <label class="form-label">Last Name</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="lastname"
+        />
+      </div>
+    </div>
+
+    <div>
+      <label class="form-label">Email</label>
+      <input
+        type="email"
+        class="form-control"
+        formControlName="email"
+        [class.is-invalid]="UserRegistrationForm.get('email')?.invalid &&
+                            (UserRegistrationForm.get('email')?.dirty ||
+                           UserRegistrationForm.get('email')?.touched)"/>
+      <div *ngIf="UserRegistrationForm.get('email')?.invalid &&
+                  (UserRegistrationForm.get('email')?.dirty ||
+                  UserRegistrationForm.get('email')?.touched)" class="errorMsg">
+        <div *ngIf="UserRegistrationForm.get('email')?.errors?.['required']">
+          This field is required.
+        </div>
+        <div *ngIf="UserRegistrationForm.get('email')?.errors?.['minlength']">
+          This field must have at least 1 character.
+        </div>
+        <div *ngIf="!UserRegistrationForm.get('email')?.errors?.['required'] && !UserRegistrationForm.get('email')?.errors?.['minlength'] 
+                      && !UserRegistrationForm.get('email')?.errors?.['maxlength'] && UserRegistrationForm.get('email')?.errors?.['pattern']" >
+          Invalid email format.
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <label class="form-label">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        formControlName="password"
+      />
+      <div *ngIf="UserRegistrationForm.get('password')?.invalid &&
+                  (UserRegistrationForm.get('password')?.dirty ||
+                      UserRegistrationForm.get('password')?.touched) "class="errorMsg">
+        <div *ngIf="UserRegistrationForm.get('password')?.errors?.['required']">
+          This field is required.
+        </div>
+        <div *ngIf="UserRegistrationForm.get('password')?.errors?.['minlength']">
+          This field have at least 5 characters.
+        </div>
+      </div>
+    </div>
+
+    <div >
+      <label class="form-label">Country</label>
+      <select
+        class="form-select"
+        aria-label="Default select example"
+        formControlName ="country"
+        #selectedCountry
+        (change)="onCountryselection(selectedCountry.value)"
+        [class.is-invalid]="UserRegistrationForm.get('country')?.invalid
+            && (UserRegistrationForm.get('country')?.dirty || UserRegistrationForm.get('country')?.touched)">
+         <option value="">--Select Country--</option>
+         <option *ngFor="let country of allCountries" [value]="country.isoCode">
+          {{ country.name }}
+        </option>
+      </select>
+      <div *ngIf="UserRegistrationForm.get('country')?.invalid &&(UserRegistrationForm.get('country')?.dirty ||
+                  UserRegistrationForm.get('country')?.touched)" class="errorMsg" >
+      <div *ngIf="UserRegistrationForm.get('country')?.errors?.['required']">
+               This field is required.
+        </div>
+     </div>
+    </div>
+    <div >
+      <label class="form-label">State</label>
+      <select
+        class="form-select"
+        aria-label="Default select example"
+        #selectedState
+        (change)="onStateselection(selectedState.value)">
+        <option value="">--Select State--</option>
+        <option *ngFor="let state of statesBasedcountry"
+          [value]="state.isoCode">{{ state.name }}</option>
+      </select>
+    </div>
+    <div >
+      <label class="form-label">City</label>
+      <select class="form-select" aria-label="Default select example">
+        <option value="">--Select City--</option>
+        <option *ngFor="let city of cityBasedStates" [value]="city.name">
+        {{ city.name }}
+        </option>
+      </select>
+    </div>
+  </div>
+    <div class="mt-4">
+      <button type="submit" (click)="userRegistrationSubmit()" class="btn-register rounded">Register</button>
+    </div>
+
+  </form>
+</div>
