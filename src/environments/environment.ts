@@ -3,7 +3,17 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+
+};
+export const firebaseConfig = {
+  apiKey: "AIzaSyDb_hGT2BNlIRa-M5GavjlsMoB4bsqMyjI",
+  authDomain: "book-lending-app-6ac6f.firebaseapp.com",
+  databaseURL: "https://book-lending-app-6ac6f-default-rtdb.firebaseio.com",
+  projectId: "book-lending-app-6ac6f",
+  storageBucket: "book-lending-app-6ac6f.appspot.com",
+  messagingSenderId: "291375047501",
+  appId: "1:291375047501:web:0450ba7785c6eed75b0d04"
 };
 
 /*

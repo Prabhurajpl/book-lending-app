@@ -103,6 +103,7 @@
       <select
         class="form-select"
         aria-label="Default select example"
+        formControlName ="state"
         #selectedState
         (change)="onStateselection(selectedState.value)">
         <option value="">--Select State--</option>
@@ -112,7 +113,8 @@
     </div>
     <div >
       <label class="form-label">City</label>
-      <select class="form-select" aria-label="Default select example">
+      <select class="form-select" aria-label="Default select example"
+      formControlName ="city">
         <option value="">--Select City--</option>
         <option *ngFor="let city of cityBasedStates" [value]="city.name">
         {{ city.name }}

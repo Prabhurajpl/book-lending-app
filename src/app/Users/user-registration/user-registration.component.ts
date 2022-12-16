@@ -16,16 +16,17 @@ export class UserRegistrationComponent implements OnInit {
   cityBasedStates!: any;
   countryCode!: string;
   constructor(private userservice: UsersService) { }
+  
   EMAIL_REGEXP = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
   UserRegistrationForm = new FormGroup({
-    firstname: new FormControl('',Validators.required),
+    firstname: new FormControl('', Validators.required),
     lastname: new FormControl(''),
-    email: new FormControl('', [ Validators.required, Validators.email, Validators.minLength(1), Validators.pattern(this.EMAIL_REGEXP)]),
-    password: new FormControl('', [Validators.required,Validators.minLength(5),]),
-    country:new FormControl('',Validators.required),
+    email: new FormControl('', [Validators.required, Validators.email, Validators.minLength(1), Validators.pattern(this.EMAIL_REGEXP)]),
+    password: new FormControl('', [Validators.required, Validators.minLength(5),]),
+    country: new FormControl('', Validators.required),
     state: new FormControl(''),
-    city:new FormControl(''),
+    city: new FormControl(''),
   })
 
   ngOnInit(): void {
@@ -40,8 +41,8 @@ export class UserRegistrationComponent implements OnInit {
     this.cityBasedStates = City.getCitiesOfState(this.countryCode, state);
   }
 
-  userRegistrationSubmit(){
-
+  userRegistrationSubmit() {
+    this.userservice.addUserdata(this.UserRegistrationForm.value);
   }
 
 
