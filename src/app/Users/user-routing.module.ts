@@ -4,8 +4,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
+  {path:'', redirectTo: '/register', pathMatch: 'full'},
   {path:'register',component:UserRegistrationComponent},
   {path:'login',component:UserLoginComponent}
+  
 ];
 
 @NgModule({
