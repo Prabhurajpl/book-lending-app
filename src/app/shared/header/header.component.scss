@@ -1,0 +1,36 @@
+
+.logout{
+    margin-left: 1262px;
+    background-color: #f44336;
+    padding: 4px;
+}
+
+.header{
+    height: 64px;
+    background-color: #8ea8bb;
+}
+  
+.column{
+    float: left;
+    width: 33.33%;
+    padding: 10px;
+    height: 64px; 
+    background-color: #8ea8bb;
+}
+.aligned-with-icon{
+    position: absolute;
+    top: 18px;
+    margin-left: 20px;
+}
+.mat-icon:hover{
+    color: #f44336;
+}
+.appheading{
+    font-family: serif;
+    font-size: larger;
+    font-weight: 400;
+}
+.btnlogout{
+    margin-left: 380px;
+    margin-top: 7px;
+}
