@@ -1,24 +1,27 @@
-import { HeaderComponent } from './header/header.component';
-import { LibraryRoutingModule } from './../Library/library-routing.module';
+import { BooksModule } from './../Books/books.module';
 import { LibraryModule } from './../Library/library.module';
+import { LibraryRoutingModule } from './../Library/library-routing.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SharedRoutingModule } from './shared-routing.module';
+import { HeaderComponent } from './header/header.component';
 
 
 @NgModule({
   declarations: [
-    HeaderComponent
+    HeaderComponent,
+    
   ],
   imports: [
     CommonModule,
-    SharedRoutingModule,
     LibraryRoutingModule,
-    LibraryModule
+    LibraryModule,
+    BooksModule
   ],
   exports:[
-    HeaderComponent
+    HeaderComponent,
   ]
+  
+ 
   
 })
 export class SharedModule { }

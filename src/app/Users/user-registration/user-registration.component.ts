@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { UsersService } from './../../Core/services/users.service';
 import { Component, OnInit } from '@angular/core';
 import { Country, State, City } from 'country-state-city';
@@ -15,7 +16,7 @@ export class UserRegistrationComponent implements OnInit {
   statesBasedcountry!: any;
   cityBasedStates!: any;
   countryCode!: string;
-  constructor(private userservice: UsersService) { }
+  constructor(private userservice: UsersService, private _router: Router) { }
   
   EMAIL_REGEXP = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
@@ -42,8 +43,10 @@ export class UserRegistrationComponent implements OnInit {
   }
 
   userRegistrationSubmit() {
-    this.userservice.addUserdata(this.UserRegistrationForm.value);
+    if(this.UserRegistrationForm.invalid){
+          return
+        }
+    this.userservice.SignUp(this.UserRegistrationForm.value);
   }
-
-
+  
 }

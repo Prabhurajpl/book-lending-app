@@ -1,4 +1,3 @@
-import { SharedRoutingModule } from './shared/shared-routing.module';
 import { SharedModule } from './shared/shared.module';
 import { UserModule } from './Users/user.module';
 import { UserRoutingModule } from './Users/user-routing.module';
@@ -10,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { AngularFireModule } from '@angular/fire/compat';
 
 @NgModule({
   declarations: [
@@ -17,15 +17,15 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     HttpClientModule,
     UserRoutingModule,
     UserModule,
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
     provideFirestore(() => getFirestore()),
-    SharedRoutingModule,
+    AngularFireModule.initializeApp(firebaseConfig),
     SharedModule,
-
+    AppRoutingModule,
+ 
   ],
   providers: [],
   bootstrap: [AppComponent],

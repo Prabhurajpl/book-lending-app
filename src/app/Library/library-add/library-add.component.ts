@@ -1,4 +1,7 @@
+import { LibraryService } from './../../Core/services/library.service';
+import { Library } from './../../shared/interfaces/library';
 import { Component, OnInit } from '@angular/core';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'library-add',
@@ -7,9 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LibraryAddComponent implements OnInit {
 
-  constructor() { }
+  librarylist : any=[];
+  constructor(private Library:LibraryService) { }
 
   ngOnInit(): void {
+    
+  }
+  onEnter(event:any){
+    let lib : Library = {
+      libname:event.target.value
+    }
+    //this.Library.addLibrary(lib)
+    this.librarylist.push(lib)
   }
 
 }

@@ -1,10 +1,10 @@
 <div class="sidebar">
-    <ul >
-     <li><a >Library</a></li>
+    <div class="txtboxaddlibrray">
+        <input type="text" class="form-control" placeholder="Add library" (keyup.enter)="onEnter($event)" >
+    </div>
+    <ul *ngFor="let library of librarylist">
+     <li><a >{{library.libname}}</a></li>
     </ul>
-    <div>
-       <!-- <button (click)="createcategorybtnclick()"  type="button" class="createbtn">Create</button> -->
-   </div>
-   </div>
+</div>
 
   

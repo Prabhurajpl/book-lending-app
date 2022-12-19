@@ -1,0 +1,22 @@
+.searchbox{
+    margin-top: 20px;
+    margin-left: 300px;
+}
+
+.searchbox input[type=text]{
+    padding: 5px;
+    font-size: 17px;
+    border: 1px solid grey;
+    float: left;
+    width: 50%;
+    background: #f1f1f1;
+}
+
+.searchbox button{
+    background-color: #2185d0;
+    padding: 5px;
+    margin-left: 10px;
+}
+.loading{
+  width: 100%;
+}
