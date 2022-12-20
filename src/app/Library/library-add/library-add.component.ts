@@ -11,17 +11,31 @@ import { take } from 'rxjs';
 export class LibraryAddComponent implements OnInit {
 
   librarylist : any=[];
-  constructor(private Library:LibraryService) { }
+  selectedLib ! :string ;
+  name! :string;
+  constructor(private libservice:LibraryService) { }
+
 
   ngOnInit(): void {
-    
+    this.getAllLibrary();
   }
-  onEnter(event:any){
+  onEnter(){
     let lib : Library = {
-      libname:event.target.value
+      libname:this.name
     }
-    //this.Library.addLibrary(lib)
-    this.librarylist.push(lib)
+    this.libservice.addLibrary(lib)
+    this.getAllLibrary();
+    this.name ="";
+  }
+
+  getAllLibrary(){
+    this.libservice.getLibcollection().subscribe(data =>{
+      this.librarylist = data;
+      console.log("data",data)
+     })
+  }
+  librayClick(event:any){
+    this.selectedLib = event.target.text;
   }
 
 }

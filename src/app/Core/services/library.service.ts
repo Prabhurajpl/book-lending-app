@@ -1,38 +1,25 @@
-import { Library } from './../../shared/interfaces/library';
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import {
-  addDoc,
-  collection,
-  doc,
-  Firestore,
-  getDoc,
-  getDocs,
-} from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+
 import { Observable, of } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class LibraryService {
+  private itemsCollection!: AngularFirestoreCollection<any>;
   liblist!: Observable<any>;
-  constructor(
-    private http: HttpClient,
-    private firestore: Firestore,
-    public _angularFireAuth: AngularFireAuth
   
-  ) { 
+  constructor(private afs: AngularFirestore) {
+    this.itemsCollection = afs.collection<any>('Library');
+    this.liblist = this.itemsCollection.valueChanges();
   }
-
-  addLibrary(value: any) {
-    const dbInstance = collection(this.firestore, 'Library');
-    addDoc(dbInstance, value)
-      .then(() => {})
-      .catch((err) => {
-        alert(err.message);
-      });
+  addLibrary(item: any) {
+    this.itemsCollection.add(item);
   }
-  
+  getLibcollection(){
+    return this.liblist;
+  }
  
 }

@@ -1,3 +1,4 @@
+import { FormsModule } from '@angular/forms';
 import { BooksModule } from './../Books/books.module';
 import { LibraryAddComponent } from './library-add/library-add.component';
 import { NgModule } from '@angular/core';
@@ -9,10 +10,12 @@ import { LibraryComponent } from './library.component';
   declarations: [
     LibraryAddComponent,
     LibraryComponent,
+    
   ],
   imports: [
     CommonModule,
-    BooksModule
+    BooksModule,
+    FormsModule
   ],
   
 })

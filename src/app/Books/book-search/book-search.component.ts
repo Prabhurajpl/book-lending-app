@@ -1,6 +1,7 @@
 import { BooksService } from './../../Core/services/books.service';
 import { Component, OnInit } from '@angular/core';
 import { finalize } from 'rxjs';
+import { LibraryService } from 'src/app/Core/services/library.service';
 @Component({
   selector: 'book-search',
   templateUrl: './book-search.component.html',
@@ -15,12 +16,15 @@ export class BookSearchComponent implements OnInit {
   postperPage =pagedetails.postperpage;
   curentpage =pagedetails.curentpage;
   totalPosts!:number;
-  constructor(private bookservice:BooksService) { 
-   
-
+  libLists!:any;
+  constructor(private bookservice:BooksService,private libservice:LibraryService) {
   }
 
   ngOnInit(): void {
+    this.libservice.getLibcollection().subscribe(data =>{
+      this.libLists = data;
+      console.log("data",data)
+     })
 
   }
 
@@ -44,9 +48,14 @@ export class BookSearchComponent implements OnInit {
     this.bookDataSource = this.allBooksList?.slice(indexofFirstpage, indexofLastpage)
     console.log("books",this.bookDataSource)
   }
+
+  addtoLibrary(isbn:string){
+
+
+  }
 }
 
 const enum pagedetails{
-  postperpage =10,
+  postperpage =12,
   curentpage = 1,
 }
