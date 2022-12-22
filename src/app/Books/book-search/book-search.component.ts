@@ -1,7 +1,9 @@
+import { doc } from '@angular/fire/firestore';
 import { BooksService } from './../../Core/services/books.service';
 import { Component, OnInit } from '@angular/core';
 import { finalize } from 'rxjs';
 import { LibraryService } from 'src/app/Core/services/library.service';
+
 @Component({
   selector: 'book-search',
   templateUrl: './book-search.component.html',
@@ -17,15 +19,13 @@ export class BookSearchComponent implements OnInit {
   curentpage =pagedetails.curentpage;
   totalPosts!:number;
   libLists!:any;
+  islistlib =false;
+  isLibararyselected =false;
+  allLibrary! : any;
   constructor(private bookservice:BooksService,private libservice:LibraryService) {
   }
 
   ngOnInit(): void {
-    this.libservice.getLibcollection().subscribe(data =>{
-      this.libLists = data;
-      console.log("data",data)
-     })
-
   }
 
   search() {
@@ -49,10 +49,19 @@ export class BookSearchComponent implements OnInit {
     console.log("books",this.bookDataSource)
   }
 
-  addtoLibrary(isbn:string){
+  addBooktoLibrary(isbn:string){
+    this.islistlib =true;
+    this.getliblist();
+   }
+   getliblist(){
+    this.libservice.getLibcollections().subscribe((data)=>{
+        this.allLibrary = data;
+     });
+    }
+    closepopup(){
+      this.islistlib =false;
+    }
 
-
-  }
 }
 
 const enum pagedetails{

@@ -43,7 +43,7 @@ export class UsersService {
 
 
   addUserdata(value: any) {
-    debugger
+    
     const dbInstance = collection(this.firestore, 'Users')
     addDoc(dbInstance, value).then(() => {
      

@@ -1,20 +1,25 @@
 <div class="header">
-    <div class="column">
+  <div class="d-flex justify-content-between">
+    <div class="">
       <h1 class="appheading">Book-Lending-App</h1>
     </div>
-    <div *ngIf="islogin_or_register">
-    <div class="column">
-      <!-- <h1 class="appheading">welcome </h1> -->
+    <div class="">
+     <h6>welcome:</h6>
     </div>
-    <div class="column">
-      <button  mat-menu-item class="btnlogout" (click)="Logout()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
-           <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
-          </svg>
-        <span class="aligned-with-icon">Logout</span>
-      </button> 
+    <div class="d-flex">
+        <div  [routerLink]="['/booksearch']" class="marginRight">
+          <h6>Home</h6>
+        </div>
+        <div [routerLink]="['/library']" class="marginRight">
+          <h6>Library</h6>
+        </div>
+
+        <div class="marginRight " (click)="Logout()">
+          <h6>Logout</h6>
+        </div>
     </div>
+
   </div>
+    
   </div>
   

@@ -1,18 +1,20 @@
+<diV class=" p-4 position-relative">
 <div class="searchbox">
   <input type="text" [(ngModel)]="searchTerm" placeholder="Search books" />
   <button (click)="search()">Search</button>
 </div>
+<div>
 
-<div class="container mt-4">
+<div class=" mt-4 ">
   <div class="row">
     <div class="col-md-3" *ngFor="let book of bookDataSource">
       <div class="custom-card">
         <div class="custom-card-body">
-          <h5 class="card-title">{{ book.title }}</h5>
-          <p>Publish year : {{ book.publish_date[0] }}</p>
-          <p>Author : {{ book.author_name[0] }}</p>
+          <h5 class="card-title">{{ book?.title ? book?.title : "" }}</h5>
+          <p>Publish year : {{ book?.publish_date[0] ? book?.publish_date[0] :"" }}</p>
+          <p>Author : {{ book?.author_name[0] ? book?.author_name[0] :""}}</p>
           <div class="custom-button">
-            <button type="button" class="btn btn-primary custom-btn">
+            <button type="button" (click)="addBooktoLibrary(book.isbn[0])" class="btn btn-primary custom-btn" >
               Add to library
             </button>
           </div>
@@ -20,7 +22,30 @@
       </div>
     </div>
   </div>
+
+  <div *ngIf="islistlib" class="liblistview">
+     <div class="container2">
+        <div  class="content">
+            <label class="form-label">Library</label>
+            <select class="form-select " style="width: 100%;" aria-label="Default select example" >
+              <option value="">--Select Library--</option>
+              <option *ngFor="let library of allLibrary" [value]="library.libname">
+                {{ library.libname }}
+              </option>
+
+            </select>
+
+
+        </div> 
+        <div class="d-flex justify-content-end pt-4">
+          <button class="btnClass" style="margin-right: 4px;">Save</button>
+          <button class="btnClass"(click)= "closepopup()">close</button>
+        </div>
+      </div>
+  </div>
+
 </div>
+
 <div class="d-flex flex-row">
   <pagination
     [postperPage]="postperPage"
@@ -29,3 +54,7 @@
     (changepagenmuber)="setPagination($event)"
   ></pagination>
 </div>
+
+
+</div>
+</diV>

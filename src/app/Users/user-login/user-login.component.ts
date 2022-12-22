@@ -31,7 +31,6 @@ export class UserLoginComponent implements OnInit {
   ngOnInit(): void {}
   
   Loginsubmit() {
-    debugger;
     if (this.UserLoginForm.invalid) {
       return;
     }
