@@ -1,11 +1,12 @@
-import { LibraryBooklistComponent } from './library-booklist/library-booklist.component';
+import { MyBooksComponent } from './my-books/my-books.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BookSearchComponent } from './book-search/book-search.component';
 
 const routes: Routes = [
   {path:'booksearch',component:BookSearchComponent},
-  //{path:'booklist',component:LibraryBooklistComponent},
+  {path:'mybooks',component:MyBooksComponent},
+
 ];
 
 @NgModule({

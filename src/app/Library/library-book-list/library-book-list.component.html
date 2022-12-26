@@ -1,0 +1,53 @@
+
+<div class="d-flex justify-content-center pt-2" >
+    <input type="text" [(ngModel)]="searchTerm"  (input)="search_book()"
+      placeholder="Search Title...">
+</div>
+<div>
+  <div  class="container text-center border border-2 mt-4 ">
+    <div class="row border border-2">
+      <div class="col border border-1 p-2 fw-bold">Title</div>
+      <div class="col border border-1 p-2 fw-bold">Author</div>
+      <div class="col border border-1 p-2 fw-bold">Status</div>
+      <div class="col border border-1 p-2 fw-bold"></div>
+    </div>
+   <div class="row" *ngFor="let book of filteredBooklist">
+      <div class="col border border-1 p-1">{{book.title}}</div>
+      <div class="col border border-1 p-1">{{book.author_name}}</div>
+      <div class="col border border-1 p-1"   [ngClass]="{
+        'notavailable' : !book.is_availabe}"> {{book.is_availabe ? 'Availabe' : 'Not availabe'}} </div>
+      <div class="col border border-1 p-1" (click)="RequestBook(book)"><button  [disabled]="!book.is_availabe">
+        Request</button>
+      </div> 
+  </div>
+</div>
+</div>
+  
+
+<div *ngIf="isRequestbook">
+  <div style="display: block;" class="modal">
+    <div class="modal-content">
+      <div>
+        <span class="close" (click)=" close_requstbook()">&times;</span>
+      </div>
+      <div class="modal-header">
+         Request Confirmation
+        </div>
+      <div >
+        <label >Book Title:</label>
+        <input type="text" class="form-control" [(ngModel)]="booktitle" disabled >
+      </div>
+      <div >
+        <label >Rental duration(days):</label>
+        <input type="text" class="form-control" [(ngModel)]="rentalDuration">
+      </div>
+      <div class="d-flex justify-content-center pt-4">
+        <button class="btn btn-outline-primary w-100" (click)="send_request()" >Send</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+

@@ -14,8 +14,8 @@ import { HeaderComponent } from './header/header.component';
   imports: [
     CommonModule,
     LibraryRoutingModule,
+    BooksModule,
     LibraryModule,
-    BooksModule
   ],
   exports:[
     HeaderComponent,

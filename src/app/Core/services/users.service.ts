@@ -4,13 +4,14 @@ import { Injectable } from '@angular/core';
 import { addDoc, doc, Firestore, getDoc, getDocs, } from '@angular/fire/firestore'
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { collection } from '@firebase/firestore'
-import { Observable, of } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService {
 
+  userEmail :string=""
   userData: any;
   useExist: boolean = false;
   constructor(private http: HttpClient, 
@@ -18,7 +19,7 @@ export class UsersService {
               public _angularFireAuth: AngularFireAuth,
               private router:Router) { }
 
-
+            
 
   SignUp(formvalues:any) {
     const { email: userEmail, password: userPassword } = Object.assign(formvalues)
@@ -61,7 +62,8 @@ export class UsersService {
         .then((result) => {
           this._angularFireAuth.authState.subscribe((user) => {
             if (user) {
-              this.router.navigateByUrl('library')
+              this.userEmail=userEmail;
+              this.router.navigateByUrl('booksearch')
             }
           });
         })

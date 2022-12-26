@@ -3,9 +3,10 @@
     <div class="">
       <h1 class="appheading">Book-Lending-App</h1>
     </div>
-    <div class="">
+    <div *ngIf=islogin_or_register>
+    <!-- <div class="">
      <h6>welcome:</h6>
-    </div>
+    </div> -->
     <div class="d-flex">
         <div  [routerLink]="['/booksearch']" class="marginRight">
           <h6>Home</h6>
@@ -13,12 +14,15 @@
         <div [routerLink]="['/library']" class="marginRight">
           <h6>Library</h6>
         </div>
+        <div [routerLink]="['/mybooks']" class="marginRight">
+          <h6>My Books</h6>
+        </div>
 
         <div class="marginRight " (click)="Logout()">
           <h6>Logout</h6>
         </div>
     </div>
-
+  </div>
   </div>
     
   </div>
