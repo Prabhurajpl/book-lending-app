@@ -3,7 +3,7 @@ import { addDoc, collectionChanges, doc, Firestore, getDocs } from '@angular/fir
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 
-import { map, Observable, of } from 'rxjs';
+import { map, Observable, of, Subject } from 'rxjs';
 
 
 @Injectable({
@@ -15,19 +15,19 @@ export class LibraryService {
   liblist!: Observable<any>;
   item$!:Observable<any>
   libCollections :any;
+  libraryView = new Subject<any>();
+
   constructor(private afs: AngularFirestore, private firestore: Firestore) {
     this.itemsCollection = afs.collection<any>('Library');
     this.liblist = this.itemsCollection.snapshotChanges();
   }
 
-
-
   addLibrary(item: any) {
     this.itemsCollection.add(item);
   }
   
-  addbooktolib(libname:string,books:any) {
-    this.afs.collection("Lib-collection").doc(libname).set({Books:books})
+  addbooktolib(libname:string,books:any)  {
+     this.afs.collection("Lib-collection").doc(libname).set({Books:books}) 
   }
   
   getLibcollections():Observable<any>{
@@ -39,6 +39,7 @@ export class LibraryService {
         }))
       )
     )
+  
   }
 
  getlibbookcollection(value?:string) :Observable<any> {
@@ -50,6 +51,11 @@ export class LibraryService {
         }))
       )
     )
+
+  }
+
+  getdocBookcollection() :Observable<any> {
+    return this.afs.collection('Lib-collection').get();
   }
 
   addReqbookList(userEmail:string,books:any){
@@ -57,20 +63,6 @@ export class LibraryService {
   }
   
   getExistingreqBookcol() :Observable<any> {
-    return this.afs.collection('Req-Book-collection').snapshotChanges().pipe(
-       map((bookcollection: any[]) =>
-       bookcollection.map((item) => ({
-           id: item.payload.doc.id,
-           ...item.payload.doc.data(),
-         }))
-       )
-     )
+     return this.afs.collection("Req-Book-collection").get()
    }
-
-   updatebookstatus(libname:string,):Observable<any>{
-       return   this.afs.collection("Lib-collection").doc(libname).get();
-   }
-   
-  
- 
 }

@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
       if (event instanceof NavigationEnd) {
         this.currentUrl = event.url;
         console.log("url",this.currentUrl)
-        if(this.currentUrl ==='/booksearch'){
+        if(this.currentUrl ==='/Searchbooks'){
           this.islogin_or_register = true;
 
         }

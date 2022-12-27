@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { BookSearchComponent } from './book-search/book-search.component';
 
 const routes: Routes = [
-  {path:'booksearch',component:BookSearchComponent},
+  {path:'Searchbooks',component:BookSearchComponent},
   {path:'mybooks',component:MyBooksComponent},
 
 ];

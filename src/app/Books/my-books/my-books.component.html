@@ -6,13 +6,16 @@
             <h5 class="card-title">{{ book?.title ? book?.title : "" }}</h5>
             <p>Publish year : {{ book?.publish_date ? book?.publish_date :"" }}</p>
             <p>Author : {{ book?.author_name ? book?.author_name:""}}</p>
-            <div class="custom-button">
-              <button type="button" class="btn btn-primary custom-btn" (click)="ReqAccept(book)" >
-                   Accept
-              </button>
+            <div class="d-flex justify-content-end pt-4">
+            <button   [ngClass]="book.is_availabe ? 'btn btn-outline-primary' : 'btn btn-outline-info'"  
+            id="{{book.isbn}}" style="margin-right: 4px;"(click)="ReqApprove(book)" >{{book.is_availabe ? 'Approve' : 'Return'}} </button>
+             <button  class="btn btn-outline-danger" >Reject </button>
             </div>
+
+
           </div>
         </div>
       </div>
+</div>
 </div>
 

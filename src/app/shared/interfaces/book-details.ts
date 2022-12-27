@@ -9,13 +9,14 @@ export interface BookDetails {
 	book_addedBy:string;
 }
 export interface ReqBookDetails {
-	useremail:string;
+	RequestedBy:string;
     title:string;
 	publish_date? : Date;
 	author_name:string;
-	Library?: string;
+	library?: string;
 	isbn: string;
 	is_availabe:boolean;
 	rent_duration: number;
 	return_date: Date;
+	book_owner:string;
 }

@@ -1,3 +1,4 @@
+import { Library } from './../../shared/interfaces/library';
 import { BooksService } from './../../Core/services/books.service';
 import { ReqBookDetails } from './../../shared/interfaces/book-details';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -37,6 +38,7 @@ export class LibraryBookListComponent implements OnInit {
     this.libservice.getlibbookcollection().subscribe((data) => {
       this.bookDataSource = data;
       this.filteredBooklist = this.bookservice.getAllbooks(this.bookDataSource);
+      this.existbooklist = this.filteredBooklist;
     });
   }
 
@@ -85,12 +87,14 @@ export class LibraryBookListComponent implements OnInit {
     this.booktitle;
 
     this.reqBooklist.push({
-      useremail: this.userEmail,
+      RequestedBy: this.userEmail,
       title: this.selectedBook.title,
+      library:this.selectedBook.library,
       publish_date: this.selectedBook.publish_date,
       author_name: this.selectedBook.author_name,
       isbn: this.selectedBook.isbn,
       is_availabe: this.selectedBook.is_availabe,
+      book_owner:this.selectedBook.book_addedBy,
       rent_duration: this.rentalDuration,
       return_date: retDate,
     });
@@ -99,8 +103,9 @@ export class LibraryBookListComponent implements OnInit {
 
   saveReqBookcollection(email: string) {
     let booklist = [];
+    let bookOwner = this.selectedBook.book_addedBy;
     let existbookcol = this.exisitingReqBookcol?.find((item: any) => {
-      return item.id === email;
+      return item.id === bookOwner;
     });
     if (typeof existbookcol != 'undefined' && existbookcol['Books']) {
       existbookcol.Books.push(this.reqBooklist[0]);
@@ -108,8 +113,8 @@ export class LibraryBookListComponent implements OnInit {
     } else {
       booklist = [...this.reqBooklist];
     }
-    this.libservice.addReqbookList(email, booklist);
+    this.libservice.addReqbookList(bookOwner, booklist);
     this.isRequestbook = false;
-    alert('Request sent to' + this.bookOwnerId);
+    alert('Request sent to ' + this.bookOwnerId);
   }
 }

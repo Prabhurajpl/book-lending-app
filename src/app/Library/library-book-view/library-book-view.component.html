@@ -1,0 +1,17 @@
+<div class="d-flex">
+  <library-add class="w-40"></library-add>
+  <div class="w-100 p-2">
+    <div class="row">
+      <div class="col-md-3" *ngFor="let book of bookDataSource"> 
+        <div class="custom-card">
+          <div class="custom-card-body">
+            <h5 class="card-title">{{ book?.title ? book?.title : "" }}</h5>
+            <p>Publish year : {{ book?.publish_date ? book?.publish_date :"" }}</p>
+            <p>Author : {{ book?.author_name ? book?.author_name :""}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

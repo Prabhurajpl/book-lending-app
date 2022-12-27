@@ -63,7 +63,7 @@ export class UsersService {
           this._angularFireAuth.authState.subscribe((user) => {
             if (user) {
               this.userEmail=userEmail;
-              this.router.navigateByUrl('booksearch')
+              this.router.navigateByUrl('Searchbooks')
             }
           });
         })

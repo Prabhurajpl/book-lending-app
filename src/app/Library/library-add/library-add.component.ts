@@ -19,7 +19,6 @@ export class LibraryAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.getliblist();
-
   }
   onEnter() {
     let lib: Library = {
@@ -31,12 +30,13 @@ export class LibraryAddComponent implements OnInit {
   }
   librayClick(event: any) {
     this.selectedLib = event.target.text;
-     const libId = this.librarylist.find((item:any) => {return item.libname === this.selectedLib}).id
-  
+    //  const libId = this.librarylist.find((item:any) => {return item.libname === this.selectedLib}).id
+    // this.libservice.libraryView.next({islibview:true,libraryid:this.selectedLib});
+     this.router.navigateByUrl(`library-view/${this.selectedLib}`)
   }
 
   getliblist(){
-  this.libservice.getLibcollections().subscribe((data)=>{
+   this.libservice.getLibcollections().subscribe((data)=>{
       this.librarylist = data;
    });
   }

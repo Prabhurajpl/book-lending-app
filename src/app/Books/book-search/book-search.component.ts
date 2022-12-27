@@ -2,7 +2,7 @@ import { UsersService } from 'src/app/Core/services/users.service';
 import { BookDetails } from './../../shared/interfaces/book-details';
 import { BooksService } from './../../Core/services/books.service';
 import { Component, OnInit } from '@angular/core';
-import { finalize } from 'rxjs';
+import {  finalize,  } from 'rxjs';
 import { LibraryService } from 'src/app/Core/services/library.service';
 
 @Component({
@@ -20,14 +20,13 @@ export class BookSearchComponent implements OnInit {
   postperPage = pagedetails.postperpage;
   curentpage = pagedetails.curentpage;
   totalPosts!: number;
-  libLists!: any;
   islistlib = false;
-  isLibararyselected = false;
   allLibrary!: any;
-  selectedbook!: any;
-  selectedLib!: any;
+  selectedbook!: string;
+  selectedLib!: string;
   bookcollection!: any;
-
+  booklist!: any;
+  bookArray: any[] = []
   constructor(
     private bookservice: BooksService,
     private libservice: LibraryService,
@@ -35,10 +34,7 @@ export class BookSearchComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.libservice.getlibbookcollection(this.selectedLib).subscribe((data) => {
-      this.bookcollection =[];
-      this.bookcollection = data;
-    });
+  
   }
 
   search() {
@@ -68,43 +64,63 @@ export class BookSearchComponent implements OnInit {
   }
 
   addBooktoLibrary(selectedbook: any) {
-    this.islistlib = true;
-    // this.selectedbook = selectedbook.isbn[0];
-    this.selectedBookdetails =[];
-    this.selectedBookdetails.push({
-           title: selectedbook?.title,
-           publish_date:selectedbook?.publish_date[0],
-	         author_name:selectedbook?.author_name[0],
-	         isbn: selectedbook.isbn[0],
-           is_availabe:true,
-           book_addedBy:this.userservice.userEmail,
-    })
-    this.getliblist();
+    this.getliblist(selectedbook);
   }
-  getliblist() {
+  getliblist(selectedbook: any) {
     this.libservice.getLibcollections().subscribe((data) => {
       this.allLibrary = data;
+      this.islistlib = true;
+      this.selectedBookdetails = [];
+      this.selectedBookdetails.push({
+        title: selectedbook?.title,
+        publish_date: selectedbook?.publish_date[0],
+        author_name: selectedbook?.author_name[0],
+        isbn: selectedbook.isbn[0],
+        is_availabe: true,
+        book_addedBy: this.userservice.userEmail,
+      });
     });
   }
   closepopup() {
     this.islistlib = false;
   }
   saveBooktoLib() {
-    let booklist = [];
-    let existlib = this.bookcollection?.find((item: any) => {
-      return item.id === this.selectedLib;
-    });
-    if (typeof existlib != 'undefined' && existlib['Books'] ) {
-       existlib.Books.push(this.selectedBookdetails[0])
-       booklist = existlib.Books;
-    } else {
-       booklist =[...this.selectedBookdetails]
+
+    this.libservice.getdocBookcollection()
+    .subscribe( {
+      next : (arg)=>{
+      this.bookArray =[];
+      arg.docs.forEach((doc :any) => {
+      this.bookArray.push({id: doc.id,
+        ...doc.data(),});
+      });
+      this.bookcollection = [];
+      this.selectedBookdetails.forEach((item)=>{
+        item.library= this.selectedLib;
+      })
+      let existlib = this.bookArray?.find((item: any) => {
+        return item.id === this.selectedLib;
+      });
+      if (typeof existlib != 'undefined' && existlib['Books']) {
+        existlib.Books.push(this.selectedBookdetails[0]);
+        this.booklist = existlib.Books;
+      } else {
+        this.booklist = [...this.selectedBookdetails];
+      }
+      this.libservice.addbooktolib(this.selectedLib, this.booklist);
+      this.islistlib = false;
+      alert('Books added to ' + this.selectedLib);
+      this.selectedLib ="";
+    },
+    error : (err)=>{
+        console.log(err)
     }
 
-    this.libservice.addbooktolib(this.selectedLib, booklist);
-    this.islistlib = false;
-    alert("Books added to"+ this.selectedLib );
+   })
+   
   }
+  
+
 }
 
 const enum pagedetails {
