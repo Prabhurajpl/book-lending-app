@@ -6,13 +6,16 @@
             <h5 class="card-title">{{ book?.title ? book?.title : "" }}</h5>
             <p>Publish year : {{ book?.publish_date ? book?.publish_date :"" }}</p>
             <p>Author : {{ book?.author_name ? book?.author_name:""}}</p>
-            <div class="d-flex justify-content-end pt-4">
-            <button   [ngClass]="book.is_availabe ? 'btn btn-outline-primary' : 'btn btn-outline-info'"  
-            id="{{book.isbn}}" style="margin-right: 4px;"(click)="ReqApprove(book)" >{{book.is_availabe ? 'Approve' : 'Return'}} </button>
-             <button  class="btn btn-outline-danger" >Reject </button>
-            </div>
-
-
+            <em class="less-focused-text"><b>Status</b>: 
+            {{book.is_issuedbook == "issued" ? 'Approved' 
+             : book.is_issuedbook == "rejected" ? "Requested book was rejected"
+             : book.is_issuedbook == "requestback" ? "Requested book to library" 
+             : 'Pending' }}</em><br>
+          </div>
+          <div class="d-flex justify-content-end pt-4">
+            <button  class="btn btn-primary"  (click)="returnBooktoLibraray(book)"
+             [disabled]="book.is_issuedbook == 'issued'  ? false :   
+                         book.is_issuedbook == 'requestback' ? false : true">Return </button>
           </div>
         </div>
       </div>

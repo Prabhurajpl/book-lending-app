@@ -1,6 +1,6 @@
 
 <div class="d-flex justify-content-center pt-2" >
-    <input type="text" [(ngModel)]="searchTerm"  (input)="search_book()"
+    <input type="text" [(ngModel)]="searchTerm"  (input)="searchBookList()"
       placeholder="Search Title...">
 </div>
 <div>
@@ -14,11 +14,11 @@
    <div class="row" *ngFor="let book of filteredBooklist">
       <div class="col border border-1 p-1">{{book.title}}</div>
       <div class="col border border-1 p-1">{{book.author_name}}</div>
-      <div class="col border border-1 p-1"   [ngClass]="{
-        'notavailable' : !book.is_availabe}"> {{book.is_availabe ? 'Availabe' : 'Not availabe'}} </div>
-      <div class="col border border-1 p-1" (click)="RequestBook(book)"><button  [disabled]="!book.is_availabe">
+      <div class="col border border-1 p-1"   [ngClass]="{'notavailable' : book.status === 'Not Available'}"> 
+        {{book.status === 'Available'  ? 'Available' : book.status === 'Requested'  ? 'Requested' : 'Not Availabe'}} </div>
+      <div class="col border border-1 p-1" (click)="requestBook(book)"><button  [disabled]="book.status == 'Available'  ? false : true" >
         Request</button>
-      </div> 
+      </div>
   </div>
 </div>
 </div>
@@ -28,7 +28,7 @@
   <div style="display: block;" class="modal">
     <div class="modal-content">
       <div>
-        <span class="close" (click)=" close_requstbook()">&times;</span>
+        <span class="close" (click)=" closeRequstPopup()">&times;</span>
       </div>
       <div class="modal-header">
          Request Confirmation
@@ -42,7 +42,7 @@
         <input type="text" class="form-control" [(ngModel)]="rentalDuration">
       </div>
       <div class="d-flex justify-content-center pt-4">
-        <button class="btn btn-outline-primary w-100" (click)="send_request()" >Send</button>
+        <button class="btn btn-outline-primary w-100" (click)="sendBookRequest()" >Send</button>
       </div>
 
     </div>

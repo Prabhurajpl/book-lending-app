@@ -2,8 +2,10 @@ import { UsersService } from 'src/app/Core/services/users.service';
 import { BookDetails } from './../../shared/interfaces/book-details';
 import { BooksService } from './../../Core/services/books.service';
 import { Component, OnInit } from '@angular/core';
-import {  finalize,  } from 'rxjs';
+import { finalize, map, Subject } from 'rxjs';
 import { LibraryService } from 'src/app/Core/services/library.service';
+import { Firestore} from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'book-search',
@@ -26,18 +28,19 @@ export class BookSearchComponent implements OnInit {
   selectedLib!: string;
   bookcollection!: any;
   booklist!: any;
-  bookArray: any[] = []
+  bookArray: any[] = [];
   constructor(
     private bookservice: BooksService,
     private libservice: LibraryService,
-    private userservice: UsersService
+    private userservice: UsersService,
+    public afsdb: AngularFirestore,
+    private firestore: Firestore
   ) {}
 
-  ngOnInit(): void {
-  
-  }
+  ngOnInit(): void {}
 
-  search() {
+   search() {
+    
     this.isLoading = true;
     this.bookservice
       .getBooks(this.searchTerm)
@@ -51,6 +54,22 @@ export class BookSearchComponent implements OnInit {
         this.totalPosts = this.allBooksList.length;
         this.setPagination(this.curentpage);
       });
+
+    //const dbRef = doc(this.firestore, 'Lib-collection',);
+
+    // this.libservice.updatdoc().subscribe(resp =>{
+    //   console.log("firestoredata",resp)
+    //   const bookId =resp[0].id;
+    //   this.afsdb.doc(`LibGroup/Lib1/Books/${bookId}`).update({is_availabe:false});
+    // })
+    
+
+    // this.libservice.getlibbookcollection().subscribe(resp=>{
+    //   console.log("alldata",resp)
+    // })
+    
+
+
   }
 
   setPagination(selectedpage: number) {
@@ -60,24 +79,24 @@ export class BookSearchComponent implements OnInit {
       indexofFirstpage,
       indexofLastpage
     );
-    console.log('books', this.bookDataSource);
   }
 
   addBooktoLibrary(selectedbook: any) {
     this.getliblist(selectedbook);
   }
+
   getliblist(selectedbook: any) {
     this.libservice.getLibcollections().subscribe((data) => {
       this.allLibrary = data;
       this.islistlib = true;
       this.selectedBookdetails = [];
       this.selectedBookdetails.push({
-        title: selectedbook?.title,
-        publish_date: selectedbook?.publish_date[0],
-        author_name: selectedbook?.author_name[0],
-        isbn: selectedbook.isbn[0],
-        is_availabe: true,
-        book_addedBy: this.userservice.userEmail,
+	          title:selectedbook?.title,
+	          publish_date : selectedbook?.publish_date[0],
+	          author_name:selectedbook?.author_name[0],
+	          isbn: selectedbook.isbn[0],
+	          status:'Available',
+	          book_addedBy:this.userservice.userEmail
       });
     });
   }
@@ -85,41 +104,17 @@ export class BookSearchComponent implements OnInit {
     this.islistlib = false;
   }
   saveBooktoLib() {
-
-    this.libservice.getdocBookcollection()
-    .subscribe( {
-      next : (arg)=>{
-      this.bookArray =[];
-      arg.docs.forEach((doc :any) => {
-      this.bookArray.push({id: doc.id,
-        ...doc.data(),});
-      });
-      this.bookcollection = [];
-      this.selectedBookdetails.forEach((item)=>{
-        item.library= this.selectedLib;
-      })
-      let existlib = this.bookArray?.find((item: any) => {
-        return item.id === this.selectedLib;
-      });
-      if (typeof existlib != 'undefined' && existlib['Books']) {
-        existlib.Books.push(this.selectedBookdetails[0]);
-        this.booklist = existlib.Books;
-      } else {
-        this.booklist = [...this.selectedBookdetails];
+    this.selectedBookdetails?.forEach((element)=>{
+       element.library = this.selectedLib;
+    })
+    this.bookservice.addBook(this.selectedLib, this.selectedBookdetails[0]).subscribe((resp:any) =>{
+       window.alert("Books added to :" + this.selectedLib)
+       this.selectedLib="";
+       this.islistlib = false;
       }
-      this.libservice.addbooktolib(this.selectedLib, this.booklist);
-      this.islistlib = false;
-      alert('Books added to ' + this.selectedLib);
-      this.selectedLib ="";
-    },
-    error : (err)=>{
-        console.log(err)
-    }
-
-   })
-   
+    );
   }
-  
+
 
 }
 

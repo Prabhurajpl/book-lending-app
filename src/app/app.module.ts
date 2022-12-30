@@ -11,6 +11,8 @@ import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { AngularFireModule } from '@angular/fire/compat';
 
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,7 +27,6 @@ import { AngularFireModule } from '@angular/fire/compat';
     AngularFireModule.initializeApp(firebaseConfig),
     SharedModule,
     AppRoutingModule,
- 
   ],
   providers: [],
   bootstrap: [AppComponent],

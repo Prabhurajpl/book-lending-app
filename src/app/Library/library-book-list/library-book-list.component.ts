@@ -1,6 +1,4 @@
-import { Library } from './../../shared/interfaces/library';
 import { BooksService } from './../../Core/services/books.service';
-import { ReqBookDetails } from './../../shared/interfaces/book-details';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { LibraryService } from 'src/app/Core/services/library.service';
 import { BookDetails } from 'src/app/shared/interfaces/book-details';
@@ -13,41 +11,31 @@ import { UsersService } from 'src/app/Core/services/users.service';
   styleUrls: ['./library-book-list.component.scss'],
 })
 export class LibraryBookListComponent implements OnInit {
+  
   bookDataSource: any[] = [];
   filteredBooklist: any[] = [];
-  searchlist!: Array<BookDetails>;
-  reqBooklist: Array<ReqBookDetails> = [];
   searchTerm: string = '';
   existbooklist!: any;
   isRequestbook = false;
   booktitle: string = '';
   rentalDuration!: any;
-  errorMsg: string = '';
-  exisitingReqBookcol!: any;
-  userEmail!: any;
   selectedBook!: any;
-  bookOwnerId: string = '';
+  bookRequestedBy : string ="";
 
   constructor(
-    private libservice: LibraryService,
-    private userDataservice: UsersService,
-    private bookservice:BooksService
+    private libraryservice: LibraryService,
+    private bookservice:BooksService,
+    private userdataservice:UsersService
   ) {}
 
   ngOnInit(): void {
-    this.libservice.getlibbookcollection().subscribe((data) => {
+    this.bookservice.getALLBooks().subscribe((data) => {
       this.bookDataSource = data;
-      this.filteredBooklist = this.bookservice.getAllbooks(this.bookDataSource);
+      this.filteredBooklist = this.bookDataSource;
       this.existbooklist = this.filteredBooklist;
     });
   }
-
-  getExisting_reqBookcol() {
-    this.libservice.getExistingreqBookcol().subscribe((data) => {
-      this.exisitingReqBookcol = data;
-    });
-  }
-  search_book() {
+  searchBookList() {
     if (!this.searchTerm || this.searchTerm.length < 3) {
       this.filteredBooklist = this.existbooklist;
       return;
@@ -59,62 +47,28 @@ export class LibraryBookListComponent implements OnInit {
     }
   }
 
-  RequestBook(book: BookDetails) {
-    this.getExisting_reqBookcol();
-    this.selectedBook = book;
-    this.isRequestbook = true;
-    this.booktitle = book.title;
-    this.bookOwnerId = book.book_addedBy;
-    console.log(book);
+  requestBook(book: BookDetails) {
+     this.selectedBook = book;
+     this.booktitle = book.title;
+     this.isRequestbook = true; 
+     
   }
-  close_requstbook() {
+  closeRequstPopup() {
     this.isRequestbook = false;
   }
 
-  send_request() {
-    // let dur = parseFloat(this.rentalDuration);
-    // if(!dur || !(!isNaN(this.rentalDuration) && (dur | 0) === dur)){
-    // 	this.errorMsg = "Error: Rent Duration has to be a number";
-    // 	return;
-    // }
-    this.getExisting_reqBookcol();
-    let retDate = new Date();
-    retDate.setDate(retDate.getDate() + +this.rentalDuration);
-    console.log(retDate);
-    //this.userEmail = 'prabhurajpl66@gmail.com';
-    this.userEmail = this.userDataservice.userEmail;
-    this.rentalDuration;
-    this.booktitle;
-
-    this.reqBooklist.push({
-      RequestedBy: this.userEmail,
-      title: this.selectedBook.title,
-      library:this.selectedBook.library,
-      publish_date: this.selectedBook.publish_date,
-      author_name: this.selectedBook.author_name,
-      isbn: this.selectedBook.isbn,
-      is_availabe: this.selectedBook.is_availabe,
-      book_owner:this.selectedBook.book_addedBy,
-      rent_duration: this.rentalDuration,
-      return_date: retDate,
-    });
-    this.saveReqBookcollection(this.userEmail);
+  sendBookRequest() {
+    let bookId ;
+    this.bookRequestedBy = this.userdataservice.userEmail;
+    this.bookservice.getSelectedBook(this.selectedBook.isbn).subscribe( (resp:any) =>{
+      bookId =resp.docs[0].id;
+      this.bookservice.updateDocs(this.selectedBook.library,bookId,this.bookRequestedBy,this.selectedBook.book_addedBy)
+      .then((resp)=>{
+        this.isRequestbook = false; 
+        alert("Request has been sent to " + this.selectedBook.book_addedBy)
+      })
+    })
   }
 
-  saveReqBookcollection(email: string) {
-    let booklist = [];
-    let bookOwner = this.selectedBook.book_addedBy;
-    let existbookcol = this.exisitingReqBookcol?.find((item: any) => {
-      return item.id === bookOwner;
-    });
-    if (typeof existbookcol != 'undefined' && existbookcol['Books']) {
-      existbookcol.Books.push(this.reqBooklist[0]);
-      booklist = existbookcol.Books;
-    } else {
-      booklist = [...this.reqBooklist];
-    }
-    this.libservice.addReqbookList(bookOwner, booklist);
-    this.isRequestbook = false;
-    alert('Request sent to ' + this.bookOwnerId);
-  }
+
 }

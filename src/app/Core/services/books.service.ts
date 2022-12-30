@@ -9,7 +9,7 @@ import { map, Observable, of } from 'rxjs';
 export class BooksService {
  
   filteredBooklist!:any;
-  constructor(private http: HttpClient,private afs: AngularFirestore) { }
+  constructor(private http: HttpClient,private db: AngularFirestore) { }
   
   getBooks(searchTerm:string): Observable<any> {
     return this.http.get(`http://openlibrary.org/search.json?q=${searchTerm}`)
@@ -20,29 +20,94 @@ export class BooksService {
     );
   }
   
-  getExistbooklist() :Observable<any> {
-    return this.afs.collection('Lib-collection').snapshotChanges().pipe(
-       map((libcollection: any[]) =>
-       libcollection.map((item) => ({
-           id: item.payload.doc.id,
-           ...item.payload.doc.data(),
-         }))
-       )
-     )
+  addBook(libraryname:string,selectedbook:any) : Observable<any>{
+    const Bookref = this.db.collection('Books-Group');
+    let Book:any = Bookref.doc(libraryname).collection('Books').doc().set(selectedbook)
+    return of(Book);
+  }
+
+  getALLBooks() : Observable<any> {
+    return this.db.collectionGroup('Books')
+    .snapshotChanges().pipe(
+      map((libcollection: any[]) =>
+      libcollection.map((item) => ({
+          id: item.payload.doc.id,
+          ...item.payload.doc.data(),
+        }))
+      )
+    )
+  }
+
+  getMyBooks(logineduser:string):Observable<any> {
+    return this.db.collectionGroup('Books', ref => ref.where('book_requestedby', '==', logineduser))
+    .snapshotChanges()
+    .pipe(
+     map((libcollection: any[]) =>
+      libcollection.map((item) => ({
+          id: item.payload.doc.id,
+          ...item.payload.doc.data(),
+        }))
+      )
+    )
+  }
+
+  getIssuedBooks(logineduser:string):Observable<any> {
+    return this.db.collectionGroup('Books', ref => ref.where('book_issuedby', '==', logineduser))
+    .snapshotChanges()
+    .pipe(
+     map((libcollection: any[]) =>
+      libcollection.map((item) => ({
+          id: item.payload.doc.id,
+          ...item.payload.doc.data(),
+        }))
+      )
+    )
+  }
+
+  getSelectedBook(bookIsbn:string,)  {
+    return this.db.collectionGroup('Books', ref => ref.where('isbn', '==', bookIsbn)).get()
    }
 
-   getAllbooks(dataSource:any) {
-    this.filteredBooklist =[];
-      for (let i = 0; i < dataSource.length; i++) {
-        let selcetedbook = [dataSource[i]];
-        for (let j = 0; j < selcetedbook[0].Books.length; j++) {
-          this.filteredBooklist.push(selcetedbook[0].Books[j]);
-        }
-      }
-      return this.filteredBooklist;
-     
+   updateDocs(selectedLibrary:any,bookid:string,bookRequestedBy?:string,bookOwner?:string) {
+        return  this.db.doc(`Books-Group/${selectedLibrary}/Books/${bookid}`).update({
+            is_requested: "true",
+            status:"Requested",
+            book_requestedby :bookRequestedBy,
+            book_issuedby :bookOwner,
+          })
     }
 
-
+    updateIssuedBookcollection(selectedLibrary:any,bookid:string){
+      return  this.db.doc(`Books-Group/${selectedLibrary}/Books/${bookid}`).update({
+        is_issuedbook: "issued",
+        status:"Not Available",
+        is_approved:"true"
+      })
+    }
+   
+    rejectBooksrequest(selectedLibrary:any,bookid:string){
+      return  this.db.doc(`Books-Group/${selectedLibrary}/Books/${bookid}`).update({
+        is_issuedbook: "rejected",
+        status:"Available",
+        is_approved:"false",
+        book_issuedby:""
+      })
+    }
+    
+    requestBacktoBook(selectedLibrary:any,bookid:string){
+      return  this.db.doc(`Books-Group/${selectedLibrary}/Books/${bookid}`).update({
+        is_issuedbook: "requestback"
+      })
+    }
+    
+    updateBooktoLibrary(selectedLibrary:any,bookid:string){
+      return  this.db.doc(`Books-Group/${selectedLibrary}/Books/${bookid}`).update({
+        is_issuedbook: "",
+        is_requested: "false",
+        status:"Available",
+        book_requestedby :"",
+        book_issuedby :"",
+      })
+    }
 
 }

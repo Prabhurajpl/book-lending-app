@@ -24,7 +24,7 @@ export class UserRegistrationComponent implements OnInit {
     firstname: new FormControl('', Validators.required),
     lastname: new FormControl(''),
     email: new FormControl('', [Validators.required, Validators.email, Validators.minLength(1), Validators.pattern(this.EMAIL_REGEXP)]),
-    password: new FormControl('', [Validators.required, Validators.minLength(5),]),
+    password: new FormControl('', [Validators.required, Validators.minLength(6),]),
     country: new FormControl('', Validators.required),
     state: new FormControl(''),
     city: new FormControl(''),

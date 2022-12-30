@@ -3,20 +3,12 @@ export interface BookDetails {
 	title:string;
 	publish_date? : Date;
 	author_name:string;
-	Library?: string;
 	isbn: string;
-	is_availabe:boolean;
+	status:string;
 	book_addedBy:string;
-}
-export interface ReqBookDetails {
-	RequestedBy:string;
-    title:string;
-	publish_date? : Date;
-	author_name:string;
-	library?: string;
-	isbn: string;
-	is_availabe:boolean;
-	rent_duration: number;
-	return_date: Date;
-	book_owner:string;
+	book_requestedby?:string;
+	book_issuedby?:string;
+	is_requested?:boolean;
+	is_issuedbook?:string;
+	image_url?:string;
 }

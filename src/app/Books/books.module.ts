@@ -7,6 +7,7 @@ import { BooksRoutingModule } from './books-routing.module';
 import { BookSearchComponent } from './book-search/book-search.component';
 import { PaginationComponent } from './pagination/pagination.component';
 import { MyBooksComponent } from './my-books/my-books.component';
+import { IssueBookComponent } from './issue-book/issue-book.component';
 
 
 
@@ -14,7 +15,8 @@ import { MyBooksComponent } from './my-books/my-books.component';
   declarations: [
     BookSearchComponent,
     PaginationComponent,
-    MyBooksComponent
+    MyBooksComponent,
+    IssueBookComponent
   ],
   imports: [
     CommonModule,

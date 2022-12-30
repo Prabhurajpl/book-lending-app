@@ -1,8 +1,7 @@
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LibraryService } from './../../Core/services/library.service';
 import { Library } from './../../shared/interfaces/library';
 import { Component, OnInit} from '@angular/core';
-import { map, } from 'rxjs';
 
 @Component({
   selector: 'library-add',
@@ -15,24 +14,21 @@ export class LibraryAddComponent implements OnInit {
   name!: string;
 
 
-  constructor(private libservice: LibraryService,private router:Router) {}
+  constructor(private libservice: LibraryService,private router:Router,
+    private activeRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.getliblist();
   }
   onEnter() {
-    let lib: Library = {
-      libname: this.name,
-    };
+    let lib: Library = { libname: this.name };
     this.libservice.addLibrary(lib);
     this.getliblist();
     this.name = '';
   }
   librayClick(event: any) {
-    this.selectedLib = event.target.text;
-    //  const libId = this.librarylist.find((item:any) => {return item.libname === this.selectedLib}).id
-    // this.libservice.libraryView.next({islibview:true,libraryid:this.selectedLib});
-     this.router.navigateByUrl(`library-view/${this.selectedLib}`)
+     this.selectedLib = event.target.text;
+      this.router.navigateByUrl(`library-view/${this.selectedLib}`)
   }
 
   getliblist(){

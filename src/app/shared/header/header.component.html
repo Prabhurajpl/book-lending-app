@@ -3,23 +3,28 @@
     <div class="">
       <h1 class="appheading">Book-Lending-App</h1>
     </div>
+    <!-- <div class="" *ngIf=islogin_or_register >
+      <h6>welcome:{{userEmail}}</h6>
+     </div> -->
     <div *ngIf=islogin_or_register>
-    <!-- <div class="">
-     <h6>welcome:</h6>
-    </div> -->
     <div class="d-flex">
-        <div  [routerLink]="['/Searchbooks']" class="marginRight">
-          <h6>Home</h6>
+        <div  [routerLink]="['/Searchbooks']"  routerLinkActive="activeLink" class="marginRight">
+          <div class="navHead">Home</div>
         </div>
-        <div [routerLink]="['/library']" class="marginRight">
-          <h6>All Books</h6>
+        <div [routerLink]="['/library']"  routerLinkActive="activeLink" class="marginRight">
+          <div class="navHead">All Books</div>
         </div>
-        <div [routerLink]="['/mybooks']" class="marginRight">
-          <h6>My Books</h6>
+        <div [routerLink]="['/mybooks']" routerLinkActive="activeLink" class="marginRight">
+          <div class="navHead">My Books</div>
+        </div>
+        <div [routerLink]="['/issuebooks']" routerLinkActive="activeLink" class="cursor-pointer marginRight">
+          <i class="bi bi-bell-fill position-relative"></i>
+          <span class="position-absolute  translate-middle badge rounded-pill bg-danger">{{booklistCount}}
+          </span>
         </div>
 
-        <div class="marginRight " (click)="Logout()">
-          <h6>Logout</h6>
+        <div class="marginRight " routerLinkActive="activeLink" (click)="Logout()">
+          <div class="navHead">Logout</div>
         </div>
     </div>
   </div>

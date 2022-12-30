@@ -2,7 +2,7 @@
 
 
 .header{
-    padding: 6px 8px 6px 8px;
+    padding: 12px 8px 6px 8px;
     background-color: #8ea8bb;
 }
   
@@ -22,4 +22,18 @@
 .marginRight{ 
     margin-right: 20px;
 
+}
+.cursor-pointer{
+    cursor: pointer;
+}
+.navHead{
+  font-weight: 500;
+}
+
+
+.activeLink{
+ padding :1px 10px 1px 10px;
+ border-radius: 6px;
+ background-color: #ffffff;
+ font-weight: 500;
 }
