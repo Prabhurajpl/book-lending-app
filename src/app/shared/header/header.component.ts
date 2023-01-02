@@ -37,15 +37,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
         }
       }
     });
-   
+
    this.userdataservice.countofbooks.subscribe((issuedBook) =>{
       this.booklistCount = issuedBook
-      console.log("count",issuedBook)
     })
-    this.userdataservice.userId.subscribe((userId) =>{
-      this.userEmail = userId
-      console.log("userId",userId)
+   this.userdataservice.userId
+   .subscribe((Firstname) =>{
+      this.userEmail = Firstname
+      console.log("Firstname",Firstname)
     })
+   
   
   }
   ngOnDestroy(): void {
@@ -64,4 +65,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     })
     return this.booklistCount
   }
+
+
 }
