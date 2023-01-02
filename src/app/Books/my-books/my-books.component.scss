@@ -1,25 +1,11 @@
-.custom-card{
-    display: flex;
-    flex-direction: column;
-    padding: 15px;
-    border: 1px solid #2185d0;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    height: 95%;
-}
-.custom-button{
-    display: flex;
-    width: 100%;
-}
-.custom-button button{
-    justify-content: end;
 
-}
-.returnBtn{
-    background-color: rgb(15, 86, 23);
-}
-.btnClass {
-    padding:2px 8px 2px 8px;
-     border-radius: 10px;
-     border-color: #2185d0;
+ .rejected {
+    color: red;
   }
+
+ .approved {
+    color: #00cd00;
+ }
+ .requestback{
+   color: rgb(9, 9, 163)
+ }

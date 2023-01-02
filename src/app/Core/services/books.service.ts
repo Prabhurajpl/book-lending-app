@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { map, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of, retry, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,17 +9,20 @@ import { map, Observable, of } from 'rxjs';
 export class BooksService {
  
   filteredBooklist!:any;
+  errorMessage :string ="";
   constructor(private http: HttpClient,private db: AngularFirestore) { }
   
   getBooks(searchTerm:string): Observable<any> {
     return this.http.get(`http://openlibrary.org/search.json?q=${searchTerm}`)
     .pipe(
+      retry(1),
       map((response: any) => {
         return response;
       }),
-    );
+      catchError(this.handleError)
+    )
   }
-  
+
   addBook(libraryname:string,selectedbook:any) : Observable<any>{
     const Bookref = this.db.collection('Books-Group');
     let Book:any = Bookref.doc(libraryname).collection('Books').doc().set(selectedbook)
@@ -34,7 +37,8 @@ export class BooksService {
           id: item.payload.doc.id,
           ...item.payload.doc.data(),
         }))
-      )
+      ),
+      catchError(this.handleError)
     )
   }
 
@@ -47,7 +51,8 @@ export class BooksService {
           id: item.payload.doc.id,
           ...item.payload.doc.data(),
         }))
-      )
+      ),
+      catchError(this.handleError)
     )
   }
 
@@ -59,8 +64,9 @@ export class BooksService {
       libcollection.map((item) => ({
           id: item.payload.doc.id,
           ...item.payload.doc.data(),
-        }))
-      )
+        })) 
+      ),
+      catchError(this.handleError)
     )
   }
 
@@ -110,4 +116,18 @@ export class BooksService {
       })
     }
 
+    handleError(error:any) {
+      let errorMessage = '';
+      if (error.error instanceof ErrorEvent) {
+        // client-side error
+        errorMessage = `Error: ${error.error.message}`;
+      } else {
+        // server-side error
+        errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+      }
+      return throwError(() => {
+          return errorMessage;
+      });
+    }
+  
 }

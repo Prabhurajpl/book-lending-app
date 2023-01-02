@@ -1,7 +1,8 @@
 import { Firestore} from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import { map, Observable,Subject } from 'rxjs';
+import { map, Observable, Subject, catchError, throwError } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Injectable({
@@ -15,14 +16,14 @@ export class LibraryService {
   libCollections :any;
   libraryView = new Subject<any>();
   collection$ = new Subject<any>();
-
+  errorMessage:string ="";
   constructor(private db: AngularFirestore, private firestore: Firestore) {
     this.itemsCollection = db.collection<any>('Library');
     this.liblist = this.itemsCollection.snapshotChanges();
   }
 
   addLibrary(item: any) {
-    this.itemsCollection.add(item);
+   return  this.itemsCollection.add(item);
   } 
 
   getLibraryBooks(selectedLibrary:string) :Observable<any>{
@@ -34,7 +35,8 @@ export class LibraryService {
           id: item.payload.doc.id,
           ...item.payload.doc.data(),
         }))
-      )
+      ),
+      catchError(this.handleError)
     )
    }
   
@@ -45,8 +47,18 @@ export class LibraryService {
           id: item.payload.doc.id,
           ...item.payload.doc.data(),
         }))
-      )
+      ),
+      catchError(this.handleError)
     )
   }
 
+  private handleError(error: HttpErrorResponse) {
+    if (error.status === 0) {
+      console.error('An error occurred:', error.error);
+    } else {
+      console.error(
+        `Backend returned code ${error.status}, body was: `, error.error);
+    }
+    return throwError(() => new Error('Something bad happened; please try again later.'));
+  }
 }

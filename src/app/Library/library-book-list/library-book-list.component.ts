@@ -1,8 +1,7 @@
 import { BooksService } from './../../Core/services/books.service';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LibraryService } from 'src/app/Core/services/library.service';
 import { BookDetails } from 'src/app/shared/interfaces/book-details';
-import { Subscription } from 'rxjs';
 import { UsersService } from 'src/app/Core/services/users.service';
 
 @Component({
@@ -16,10 +15,6 @@ export class LibraryBookListComponent implements OnInit {
   filteredBooklist: any[] = [];
   searchTerm: string = '';
   existbooklist!: any;
-  isRequestbook = false;
-  booktitle: string = '';
-  rentalDuration!: any;
-  selectedBook!: any;
   bookRequestedBy : string ="";
 
   constructor(
@@ -29,6 +24,7 @@ export class LibraryBookListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.bookRequestedBy = this.userdataservice.userEmail;
     this.bookservice.getALLBooks().subscribe((data) => {
       this.bookDataSource = data;
       this.filteredBooklist = this.bookDataSource;
@@ -48,27 +44,22 @@ export class LibraryBookListComponent implements OnInit {
   }
 
   requestBook(book: BookDetails) {
-     this.selectedBook = book;
-     this.booktitle = book.title;
-     this.isRequestbook = true; 
-     
+    if(book.book_addedBy === this.bookRequestedBy){
+      alert("Owner can not request book")
+      return
+    }
+     let bookId ;
+     this.bookservice.getSelectedBook(book.isbn).subscribe({
+       next: (resp:any) =>{
+       bookId =resp.docs[0].id;
+       this.bookservice.updateDocs(book.library,bookId,this.bookRequestedBy,book.book_addedBy)
+       .then((resp)=>{
+         alert("Request has been sent to " + book.book_addedBy)
+       })
+       },
+      error:(err)=>{
+          console.log("error",err.messages)
+       }}
+     )
   }
-  closeRequstPopup() {
-    this.isRequestbook = false;
-  }
-
-  sendBookRequest() {
-    let bookId ;
-    this.bookRequestedBy = this.userdataservice.userEmail;
-    this.bookservice.getSelectedBook(this.selectedBook.isbn).subscribe( (resp:any) =>{
-      bookId =resp.docs[0].id;
-      this.bookservice.updateDocs(this.selectedBook.library,bookId,this.bookRequestedBy,this.selectedBook.book_addedBy)
-      .then((resp)=>{
-        this.isRequestbook = false; 
-        alert("Request has been sent to " + this.selectedBook.book_addedBy)
-      })
-    })
-  }
-
-
 }

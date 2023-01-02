@@ -1,9 +1,8 @@
 import { BooksService } from 'src/app/Core/services/books.service';
-import { LibraryService } from 'src/app/Core/services/library.service';
 import { UsersService } from './../../Core/services/users.service';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, BehaviorSubject, switchMap, Observable, first, take } from 'rxjs';
 
 @Component({
   selector: 'booklending-header',
@@ -17,28 +16,38 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userEmail: string = '';
   bookArray: any[] = [];
   myBooklist!: any;
-  booklistCount!: number;
-
+  booklistCount!: any;
+  $subs! :Subscription;
+  
   constructor(
     private router: Router,
     private userdataservice: UsersService,
     private bookservice: BooksService
   ) {}
 
+  
   ngOnInit(): void {
+    debugger
     this.userEmail = this.userdataservice.userEmail;
     this.routepathsubscr = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.currentUrl = event.url;
-        console.log('url', this.currentUrl);
         if (this.currentUrl === '/Searchbooks') {
           this.islogin_or_register = true;
-          this.getissuebooklist(this.userdataservice.userEmail);
         }
       }
     });
+   
+   this.userdataservice.countofbooks.subscribe((issuedBook) =>{
+      this.booklistCount = issuedBook
+      console.log("count",issuedBook)
+    })
+    this.userdataservice.userId.subscribe((userId) =>{
+      this.userEmail = userId
+      console.log("userId",userId)
+    })
+  
   }
-
   ngOnDestroy(): void {
     this.routepathsubscr.unsubscribe();
   }
@@ -47,11 +56,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('login');
   }
 
-  getissuebooklist(userId:string) {
+  getissuebooklist(userId:string) : Observable<any> {
     this.bookservice.getIssuedBooks(userId).subscribe({
       next: (resp) => {
-        this.booklistCount = resp.length;
+         this.booklistCount = resp.length;
       },
-    });
+    })
+    return this.booklistCount
   }
 }

@@ -1,24 +1,26 @@
-<div class="p-4">
-    <div class="row">
-      <div class="col-md-3" *ngFor="let book of myBooklist"> 
-        <div class="custom-card">
-          <div class="custom-card-body">
-            <h5 class="card-title">{{ book?.title ? book?.title : "" }}</h5>
-            <p>Publish year : {{ book?.publish_date ? book?.publish_date :"" }}</p>
-            <p>Author : {{ book?.author_name ? book?.author_name:""}}</p>
-            <em class="less-focused-text"><b>Status</b>: 
-            {{book.is_issuedbook == "issued" ? 'Approved' 
+<div>
+  <div  class="container text-center border border-2 mt-4 ">
+    <div class="row border border-2">
+      <div class="col border border-1 p-2 fw-bold">Title</div>
+      <div class="col border border-1 p-2 fw-bold">Author</div>
+      <div class="col border border-1 p-2 fw-bold">Status</div>
+      <div class="col border border-1 p-2 fw-bold"></div>
+    </div>
+   <div class="row" *ngFor="let book of myBooklist">
+      <div class="col border border-1 p-1">{{book.title}}</div>
+      <div class="col border border-1 p-1">{{book.author_name}}</div>
+      <div class="col border border-1 p-1"   [ngClass]="{'rejected':book.is_issuedbook == 'rejected', 
+                                                          'approved': book.is_issuedbook == 'issued',
+                                                          'requestback': book.is_issuedbook == 'requestback'                                          }" > 
+        {{book.is_issuedbook == "issued" ? 'Approved' 
              : book.is_issuedbook == "rejected" ? "Requested book was rejected"
              : book.is_issuedbook == "requestback" ? "Requested book to library" 
-             : 'Pending' }}</em><br>
-          </div>
-          <div class="d-flex justify-content-end pt-4">
-            <button  class="btn btn-primary"  (click)="returnBooktoLibraray(book)"
-             [disabled]="book.is_issuedbook == 'issued'  ? false :   
-                         book.is_issuedbook == 'requestback' ? false : true">Return </button>
-          </div>
-        </div>
+             : 'Pending' }} </div>
+      <div class="col border border-1 p-1" ><button  (click)="returnBooktoLibraray(book)"
+        [disabled]="book.is_issuedbook == 'issued'  ? false :   
+                     book.is_issuedbook == 'requestback' ? false : true" >Return</button>
       </div>
-</div>
-</div>
+  </div>
 
+</div>
+</div>

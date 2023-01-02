@@ -1,4 +1,4 @@
-import { Component,OnInit } from '@angular/core';
+import { Component,OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LibraryService } from 'src/app/Core/services/library.service';
 
@@ -10,10 +10,13 @@ import { LibraryService } from 'src/app/Core/services/library.service';
 export class LibraryBookViewComponent implements OnInit {
 
   bookDataSource!: any;
+  libraryName!: string;
+  @Output() Library = new EventEmitter<string>();
   constructor(private libservice: LibraryService,private activeRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.activeRoute.params.subscribe((params) => {
+      this.libraryName = params['name'];
       this.getLibrarybooks(params['name']);
     })
   }
@@ -22,4 +25,8 @@ export class LibraryBookViewComponent implements OnInit {
        this.bookDataSource = respData;
     })
   }
+  sendlibraryname(){
+    this.Library.emit(this.libraryName)
+  }
+ 
 }

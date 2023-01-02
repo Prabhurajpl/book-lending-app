@@ -1,10 +1,9 @@
 import { UsersService } from 'src/app/Core/services/users.service';
 import { BookDetails } from './../../shared/interfaces/book-details';
 import { BooksService } from './../../Core/services/books.service';
-import { Component, OnInit } from '@angular/core';
-import { finalize, map, Subject } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { LibraryService } from 'src/app/Core/services/library.service';
-import { Firestore} from '@angular/fire/firestore';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
@@ -12,10 +11,9 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
   templateUrl: './book-search.component.html',
   styleUrls: ['./book-search.component.scss'],
 })
-export class BookSearchComponent implements OnInit {
+export class BookSearchComponent implements OnInit,OnDestroy {
   searchTerm: string = '';
   selectedBookdetails!: Array<BookDetails>;
-
   bookDataSource!: any;
   allBooksList!: any;
   isLoading = false;
@@ -29,47 +27,34 @@ export class BookSearchComponent implements OnInit {
   bookcollection!: any;
   booklist!: any;
   bookArray: any[] = [];
+  subs$! : Subscription;
   constructor(
     private bookservice: BooksService,
     private libservice: LibraryService,
     private userservice: UsersService,
     public afsdb: AngularFirestore,
-    private firestore: Firestore
   ) {}
-
-  ngOnInit(): void {}
-
-   search() {
-    
-    this.isLoading = true;
-    this.bookservice
-      .getBooks(this.searchTerm)
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
+  ngOnInit(): void {
+    this.subs$ = this.bookservice.getIssuedBooks(this.userservice.userEmail).subscribe((resp) =>{
+              this.userservice.changeCountofBook(resp.length)
         })
-      )
-      .subscribe((response) => {
+   }
+
+  search() {
+    this.isLoading = true;
+    this.bookservice.getBooks(this.searchTerm).subscribe({
+      next: (response) => {
         this.allBooksList = response.docs;
         this.totalPosts = this.allBooksList.length;
         this.setPagination(this.curentpage);
-      });
-
-    //const dbRef = doc(this.firestore, 'Lib-collection',);
-
-    // this.libservice.updatdoc().subscribe(resp =>{
-    //   console.log("firestoredata",resp)
-    //   const bookId =resp[0].id;
-    //   this.afsdb.doc(`LibGroup/Lib1/Books/${bookId}`).update({is_availabe:false});
-    // })
-    
-
-    // this.libservice.getlibbookcollection().subscribe(resp=>{
-    //   console.log("alldata",resp)
-    // })
-    
-
-
+      },
+      error:(err) => {
+        console.log(customErrormesages.bookSearchuURL + err.messages);
+      },
+      complete:() => {
+        this.isLoading = false;
+      },
+  });
   }
 
   setPagination(selectedpage: number) {
@@ -86,39 +71,58 @@ export class BookSearchComponent implements OnInit {
   }
 
   getliblist(selectedbook: any) {
-    this.libservice.getLibcollections().subscribe((data) => {
-      this.allLibrary = data;
-      this.islistlib = true;
-      this.selectedBookdetails = [];
-      this.selectedBookdetails.push({
-	          title:selectedbook?.title,
-	          publish_date : selectedbook?.publish_date[0],
-	          author_name:selectedbook?.author_name[0],
-	          isbn: selectedbook.isbn[0],
-	          status:'Available',
-	          book_addedBy:this.userservice.userEmail
-      });
+    this.libservice.getLibcollections().subscribe({
+      next: (response) => {
+        this.allLibrary = response;
+        this.islistlib = true;
+        this.selectedBookdetails = [];
+        this.selectedBookdetails.push({
+          title: selectedbook?.title,
+          publish_date: selectedbook?.publish_date[0],
+          author_name: selectedbook?.author_name[0],
+          isbn: selectedbook.isbn[0],
+          status: 'Available',
+          book_addedBy: this.userservice.userEmail,
+        });
+      },
+      error: (err) => {
+        console.log(customErrormesages.getLibraryCollection + err.messages);
+      },
     });
   }
+
   closepopup() {
     this.islistlib = false;
   }
   saveBooktoLib() {
-    this.selectedBookdetails?.forEach((element)=>{
-       element.library = this.selectedLib;
-    })
-    this.bookservice.addBook(this.selectedLib, this.selectedBookdetails[0]).subscribe((resp:any) =>{
-       window.alert("Books added to :" + this.selectedLib)
-       this.selectedLib="";
-       this.islistlib = false;
-      }
-    );
+    this.selectedBookdetails?.forEach((element) => {
+      element.library = this.selectedLib;
+    });
+    this.bookservice.addBook(this.selectedLib, this.selectedBookdetails[0])
+      .subscribe({
+        next:(resp: any) => {
+        window.alert('Books added to :' + this.selectedLib);
+        this.selectedLib = '';
+        this.islistlib = false;
+        },
+        error: (err) =>{
+          console.log(customErrormesages.addBooktoLibrary + err.messages);
+        }
+      });
   }
-
-
+  
+  ngOnDestroy(): void {
+    this.subs$.unsubscribe();
+  }
 }
 
 const enum pagedetails {
   postperpage = 12,
   curentpage = 1,
+}
+
+const enum customErrormesages {
+  bookSearchuURL = 'error occure at book search',
+  getLibraryCollection = 'erorr occured try to fetch libcollection',
+  addBooktoLibrary ="error occured in add book to library",
 }

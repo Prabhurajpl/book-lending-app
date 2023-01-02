@@ -33,21 +33,26 @@ export class IssueBookComponent implements OnInit {
     let btn_Accept = <HTMLElement>document.getElementById(book.isbn);
     let bookId;
     if (btn_Accept.innerText === 'Approve') {
-      this.bookservice.getSelectedBook(book.isbn).subscribe((resp)=>{
-      bookId =resp.docs[0].id;
-      this.bookservice.updateIssuedBookcollection(book.library,bookId)
-      .then((resp)=>{
-        btn_Accept.innerText = 'Request Back';
-        alert("Request has been updated")
-      })
-      })
+      this.bookservice.getSelectedBook(book.isbn).subscribe({
+      next: (resp)=>{
+              bookId =resp.docs[0].id;
+              this.bookservice.updateIssuedBookcollection(book.library,bookId) .then((resp)=>{
+               btn_Accept.innerText = 'Request Back';
+              alert("Request has been updated") 
+              }).catch((err)=>{
+                console.log("error", err.messages)
+              })
+      },
+      error :(err)=>{
+         console.log("error", err.messages)
+      }})
     }else{
       this.bookservice.getSelectedBook(book.isbn).subscribe((resp)=>{
         bookId =resp.docs[0].id;
         this.bookservice.requestBacktoBook(book.library,bookId)
         .then((resp)=>{
           btn_Accept.innerText = 'Request Back';
-          alert("Request has been sent")
+          alert("Request has been sent to :" + book.book_requestedby )
         })
         })
     }
@@ -56,20 +61,18 @@ export class IssueBookComponent implements OnInit {
 
   rejectbookreq(book:any){
     let bookId;
-    this.bookservice.getSelectedBook(book.isbn).subscribe((resp)=>{
+    this.bookservice.getSelectedBook(book.isbn).subscribe({
+      next:(resp)=>{
       bookId =resp.docs[0].id;
       this.bookservice.rejectBooksrequest(book.library,bookId)
       .then((resp)=>{
-         console.log(("Book list updated.."))
+         alert(("Book list updated.."))
       })
-      })
-    
+      },
+      error:(err)=>{
+        console.log("error",err.messages)
+      }})
   }
 
- 
-
-
-
-  
 
 }

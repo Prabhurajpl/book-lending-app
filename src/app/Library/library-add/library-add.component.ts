@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { LibraryService } from './../../Core/services/library.service';
 import { Library } from './../../shared/interfaces/library';
-import { Component, OnInit} from '@angular/core';
+import { Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'library-add',
@@ -10,7 +10,7 @@ import { Component, OnInit} from '@angular/core';
 })
 export class LibraryAddComponent implements OnInit {
   librarylist: any = [];
-  selectedLib!: string;
+  @Input() selectedLib!: string;
   name!: string;
 
 
@@ -22,8 +22,11 @@ export class LibraryAddComponent implements OnInit {
   }
   onEnter() {
     let lib: Library = { libname: this.name };
-    this.libservice.addLibrary(lib);
-    this.getliblist();
+    this.libservice.addLibrary(lib).then(() => {
+      this.getliblist();
+    }).catch((err) => {
+       console.log("error",err.messages)
+    });
     this.name = '';
   }
   librayClick(event: any) {
@@ -36,5 +39,6 @@ export class LibraryAddComponent implements OnInit {
       this.librarylist = data;
    });
   }
+
   
 }
