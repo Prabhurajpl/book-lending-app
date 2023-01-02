@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { UsersService } from './../../Core/services/users.service';
 import { Component, OnInit } from '@angular/core';
 import { Country, State, City } from 'country-state-city';
@@ -15,17 +16,18 @@ export class UserRegistrationComponent implements OnInit {
   statesBasedcountry!: any;
   cityBasedStates!: any;
   countryCode!: string;
-  constructor(private userservice: UsersService) { }
+  constructor(private userservice: UsersService, private _router: Router) { }
+  
   EMAIL_REGEXP = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
   UserRegistrationForm = new FormGroup({
-    firstname: new FormControl('',Validators.required),
+    firstname: new FormControl('', Validators.required),
     lastname: new FormControl(''),
-    email: new FormControl('', [ Validators.required, Validators.email, Validators.minLength(1), Validators.pattern(this.EMAIL_REGEXP)]),
-    password: new FormControl('', [Validators.required,Validators.minLength(5),]),
-    country:new FormControl('',Validators.required),
+    email: new FormControl('', [Validators.required, Validators.email, Validators.minLength(1), Validators.pattern(this.EMAIL_REGEXP)]),
+    password: new FormControl('', [Validators.required, Validators.minLength(6),]),
+    country: new FormControl('', Validators.required),
     state: new FormControl(''),
-    city:new FormControl(''),
+    city: new FormControl(''),
   })
 
   ngOnInit(): void {
@@ -40,9 +42,11 @@ export class UserRegistrationComponent implements OnInit {
     this.cityBasedStates = City.getCitiesOfState(this.countryCode, state);
   }
 
-  userRegistrationSubmit(){
-
+  userRegistrationSubmit() {
+    if(this.UserRegistrationForm.invalid){
+          return
+        }
+    this.userservice.SignUp(this.UserRegistrationForm.value);
   }
-
-
+  
 }

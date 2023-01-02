@@ -1,0 +1,26 @@
+<div>
+  <div  class="container text-center border border-2 mt-4 ">
+    <div class="row border border-2">
+      <div class="col border border-1 p-2 fw-bold">Title</div>
+      <div class="col border border-1 p-2 fw-bold">Author</div>
+      <div class="col border border-1 p-2 fw-bold">Status</div>
+      <div class="col border border-1 p-2 fw-bold"></div>
+    </div>
+   <div class="row" *ngFor="let book of myBooklist">
+      <div class="col border border-1 p-1">{{book.title}}</div>
+      <div class="col border border-1 p-1">{{book.author_name}}</div>
+      <div class="col border border-1 p-1"   [ngClass]="{'rejected':book.is_issuedbook == 'rejected', 
+                                                          'approved': book.is_issuedbook == 'issued',
+                                                          'requestback': book.is_issuedbook == 'requestback'                                          }" > 
+        {{book.is_issuedbook == "issued" ? 'Approved' 
+             : book.is_issuedbook == "rejected" ? "Requested book was rejected"
+             : book.is_issuedbook == "requestback" ? "Requested book to library" 
+             : 'Pending' }} </div>
+      <div class="col border border-1 p-1" ><button  (click)="returnBooktoLibraray(book)"
+        [disabled]="book.is_issuedbook == 'issued'  ? false :   
+                     book.is_issuedbook == 'requestback' ? false : true" >Return</button>
+      </div>
+  </div>
+
+</div>
+</div>

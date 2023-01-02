@@ -1,0 +1,66 @@
+<div class="d-flex">
+  <library-add class="w-40" ></library-add>
+  <div class="w-100 p-1">
+  <div class="searchbox">
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Search books" />
+    <button (click)="search()">Search</button>
+  </div>
+  <div class=" mt-4 ">
+    <progress *ngIf="isLoading" class="loading">Loading...</progress>
+    <div class="row">
+      <div class="col-md-3" *ngFor="let book of bookDataSource"> 
+        <div class="custom-card">
+          <div class="custom-card-body">
+            <h5 class="card-title">{{ book?.title ? book?.title : "" }}</h5>
+            <p>Publish year : {{ book?.publish_date ? book?.publish_date[0] :"" }}</p>
+            <p>Author : {{ book?.author_name ? book?.author_name[0] :""}}</p>
+            <div class="custom-button">
+              <button type="button" (click)="addBooktoLibrary(book)" class="btn btn-primary custom-btn" >
+                Add to library
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<div *ngIf="islistlib">
+  <div style="display: block;" class="modal">
+    <div class="modal-content">
+      <div>
+        <span class="close" (click)="closepopup()">&times;</span>
+      </div>
+      <div class="modal-header">
+           Select Library
+        </div>
+      <div >
+        <label class="form-label">Library</label>
+        <select class="form-select " style="width: 100%;" aria-label="Default select example" [(ngModel)]="selectedLib" >
+          <option value="">--Select Library--</option>
+          <option *ngFor="let library of allLibrary" >
+            {{ library.libname }}
+          </option>
+        </select>
+      </div>
+      <div class="d-flex justify-content-center pt-4">
+        <button class="btn btn-outline-primary w-100" (click)="saveBooktoLib()" >Save</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="d-flex flex-row">
+  <pagination
+    [postperPage]="postperPage"
+    [totalPosts]="totalPosts"
+    [curentpage]="curentpage"
+    (changepagenmuber)="setPagination($event)"
+  ></pagination>
+</div>
+
+</div>
+</div>
+</div>
+
+

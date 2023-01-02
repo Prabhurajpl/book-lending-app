@@ -1,0 +1,32 @@
+<div class="d-flex justify-content-center pt-2" >
+    <input type="text" [(ngModel)]="searchTerm"  (input)="searchBookList()"
+      placeholder="Search Title...">
+</div>
+<div>
+  <div  class="container text-center border border-2 mt-4 ">
+    <div class="row border border-2">
+      <div class="col border border-1 p-2 fw-bold">Title</div>
+      <div class="col border border-1 p-2 fw-bold">Author</div>
+      <div class="col border border-1 p-2 fw-bold">Book Added By</div>
+      <div class="col border border-1 p-2 fw-bold">Status</div>
+      <div class="col border border-1 p-2 fw-bold"></div>
+    </div>
+   <div class="row" *ngFor="let book of filteredBooklist">
+      <div class="col border border-1 p-1">{{book.title}}</div>
+      <div class="col border border-1 p-1">{{book.author_name}}</div>
+      <div class="col border border-1 p-1">{{book.book_addedBy}}</div>
+      <div class="col border border-1 p-1"   [ngClass]="{'notavailable' : book.status === 'Not Available'}"> 
+        {{book.status === 'Available'  ? 'Available' : book.status === 'Requested'  ? 'Requested' : 'Not Availabe'}} </div>
+      <div class="col border border-1 p-1" (click)="requestBook(book)"><button  
+        [disabled]="book.status == 'Available'  ? false : true" >
+        Request</button>
+      </div>
+  </div>
+
+</div>
+</div>
+  
+
+
+
+
