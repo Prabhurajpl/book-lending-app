@@ -19,6 +19,9 @@ export class UsersService {
   countofbooks = this.issuedBook.asObservable();
   userEmail$ = new BehaviorSubject<string>("")
   userId = this.userEmail$.asObservable();
+  public isLogined = new BehaviorSubject<boolean>(false);
+  loginedSucesss = this.isLogined.asObservable();
+  
   constructor(
     private http: HttpClient,
     private firestore: Firestore,
@@ -46,6 +49,7 @@ export class UsersService {
     return this._angularFireAuth.currentUser
       .then((user: any) => user.sendEmailVerification())
       .then(() => {
+        this.isLogined.next(false)
         this.router.navigateByUrl('verify-email');
       })
       .catch((error) => {
@@ -74,6 +78,7 @@ export class UsersService {
             if (user) {
               this.userEmail = user.email?.toString() ;
               this.isLoginedUser = true;
+              this.isLogined.next(true);
               this.router.navigateByUrl('Searchbooks');
             }
           });
