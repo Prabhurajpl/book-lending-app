@@ -28,8 +28,9 @@ export class BookSearchComponent implements OnInit,OnDestroy {
   booklist!: any;
   bookArray: any[] = [];
   subs$! : Subscription;
+  librarySubscr !:Subscription;
   bookHasExistInLibrary =false;
-
+  userId : string ="";
   constructor(
     private bookservice: BooksService,
     private libservice: LibraryService,
@@ -37,6 +38,7 @@ export class BookSearchComponent implements OnInit,OnDestroy {
     public afsdb: AngularFirestore,
   ) {}
   ngOnInit(): void {
+    this.userId = this.userservice.userEmail;
     this.subs$ = this.bookservice.getIssuedBooks(this.userservice.userEmail).subscribe((resp) =>{
               this.userservice.changeCountofBook(resp.length)
         })
@@ -73,9 +75,9 @@ export class BookSearchComponent implements OnInit,OnDestroy {
   }
 
   getliblist(selectedbook: any) {
-    this.libservice.getLibcollections().subscribe({
-      next: (response) => {
-        this.allLibrary = response;
+   this.librarySubscr =  this.libservice.getLibcollections().subscribe({
+     next :(response) => {
+        this.allLibrary = response?.filter((item:any) => {return item.added_by === this.userId});
         this.islistlib = true;
         this.selectedBookdetails = [];
         this.selectedBookdetails.push({
@@ -86,7 +88,7 @@ export class BookSearchComponent implements OnInit,OnDestroy {
           status: 'Available',
           book_addedBy: this.userservice.userEmail,
         });
-      },
+     },
       error: (err) => {
         console.log(customErrormesages.getLibraryCollection + err.messages);
       },
@@ -96,6 +98,8 @@ export class BookSearchComponent implements OnInit,OnDestroy {
   closepopup() {
     this.selectedLib ="";
     this.islistlib = false;
+    this.librarySubscr.unsubscribe();
+
   }
   saveBooktoLib() {
     if(this.selectedLib === ""){

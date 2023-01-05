@@ -49,7 +49,6 @@ export class UsersService {
     return this._angularFireAuth.currentUser
       .then((user: any) => user.sendEmailVerification())
       .then(() => {
-        this.isLogined.next(false)
         this.router.navigateByUrl('verify-email');
       })
       .catch((error) => {

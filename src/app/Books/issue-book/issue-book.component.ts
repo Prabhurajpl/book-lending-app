@@ -80,7 +80,6 @@ export class IssueBookComponent implements OnInit,OnDestroy {
   }
   
   ngOnDestroy(): void {
-    this.subsrejctedbook$.unsubscribe();
   }
 
 }

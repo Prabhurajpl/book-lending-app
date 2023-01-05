@@ -46,9 +46,9 @@ export class UserLoginComponent implements OnInit {
     this.userdataservice.Login(this.UserLoginForm.value).then(()=>{
       this.bookservice.getLoginedUserDetails(userEmail).pipe(first())   
       .subscribe({
-        next : (resp) =>{
+      next : (resp) =>{
           this.userdataservice.userEmail$.next(resp[0].firstname)
-        }
+       }
       })
     }).catch(err =>{
       throw new Error(err.messages)
