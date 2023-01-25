@@ -26,6 +26,7 @@ export class IssueBookComponent implements OnInit,OnDestroy {
 
   ngOnInit(): void {
     const userId = this.userDataservice.userEmail;
+    if(userId != undefined)
     this.bookservice.getIssuedBooks(userId).subscribe(resp =>{
         this.issuedBooklist =resp;
     })
@@ -36,20 +37,20 @@ export class IssueBookComponent implements OnInit,OnDestroy {
     let bookId;
     if (btn_Accept.innerText === 'Approve') {
       this.bookservice.getSelectedBook(book.isbn).subscribe({
-      next: (resp)=>{
+      next: (resp:any)=>{
               bookId =resp.docs[0].id;
-              this.bookservice.updateIssuedBookcollection(book.library,bookId) .then((resp)=>{
+              this.bookservice.updateIssuedBookcollection(book.library,bookId) .then((resp:any)=>{
                btn_Accept.innerText = 'Request Back';
               alert("Request has been updated") 
-              }).catch((err)=>{
+              }).catch((err:any)=>{
                 console.log("error", err.messages)
               })
       },
-      error :(err)=>{
+      error :(err:any)=>{
          console.log("error", err.messages)
       }})
     }else{
-      this.bookservice.getSelectedBook(book.isbn).subscribe((resp)=>{
+      this.bookservice.getSelectedBook(book.isbn).subscribe((resp:any)=>{
         bookId =resp.docs[0].id;
         this.bookservice.requestBacktoBook(book.library,bookId)
         .then((resp)=>{
@@ -64,7 +65,7 @@ export class IssueBookComponent implements OnInit,OnDestroy {
   rejectbookreq(book:any){
     let bookId;
     this.bookservice.getSelectedBook(book.isbn).subscribe({
-      next:(resp)=>{
+      next:(resp:any)=>{
       bookId =resp.docs[0].id;
       this.bookservice.rejectBooksrequest(book.library,bookId)
       .then((resp)=>{
@@ -74,7 +75,7 @@ export class IssueBookComponent implements OnInit,OnDestroy {
     })
       })
       },
-      error:(err)=>{
+      error:(err:any)=>{
         console.log("error",err.messages)
       }})
   }

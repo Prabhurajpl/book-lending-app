@@ -38,7 +38,11 @@ export class BookSearchComponent implements OnInit,OnDestroy {
     public afsdb: AngularFirestore,
   ) {}
   ngOnInit(): void {
-    this.userId = this.userservice.userEmail;
+    this.getIssuedBooksCount();
+   }
+
+   getIssuedBooksCount(){
+    if(this.userservice.userEmail != undefined)
     this.subs$ = this.bookservice.getIssuedBooks(this.userservice.userEmail).subscribe((resp) =>{
               this.userservice.changeCountofBook(resp.length)
         })
@@ -75,6 +79,7 @@ export class BookSearchComponent implements OnInit,OnDestroy {
   }
 
   getliblist(selectedbook: any) {
+   this.userId = this.userservice.userEmail;
    this.librarySubscr =  this.libservice.getLibcollections().subscribe({
      next :(response) => {
         this.allLibrary = response?.filter((item:any) => {return item.added_by === this.userId});
@@ -98,6 +103,7 @@ export class BookSearchComponent implements OnInit,OnDestroy {
   closepopup() {
     this.selectedLib ="";
     this.islistlib = false;
+    if(this.librarySubscr)
     this.librarySubscr.unsubscribe();
 
   }
@@ -135,6 +141,7 @@ export class BookSearchComponent implements OnInit,OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if(this.subs$)
     this.subs$.unsubscribe();
   }
 }

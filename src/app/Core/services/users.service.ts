@@ -1,11 +1,9 @@
 import { Router } from '@angular/router';
-import { HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { addDoc, Firestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { collection } from '@firebase/firestore';
-import { BehaviorSubject, map, Observable, of, Subject, throwError } from 'rxjs';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -23,21 +21,20 @@ export class UsersService {
   loginedSucesss = this.isLogined.asObservable();
   
   constructor(
-    private http: HttpClient,
     private firestore: Firestore,
     public _angularFireAuth: AngularFireAuth,
     private router: Router,
-    private db: AngularFirestore
   ) {}
 
   changeCountofBook(newCount:number) {
     this.issuedBook.next(newCount);
   }
 
-  SignUp(formvalues: any) {
+  SignUp(formvalues: any) :object {
     const { email: userEmail, password: userPassword } = Object.assign(formvalues);
     return this._angularFireAuth.createUserWithEmailAndPassword(userEmail, userPassword)
-      .then(() => {
+      .then((resp) => {
+        if(resp.additionalUserInfo?.isNewUser)
         this.addUserdata(formvalues);
       })
       .catch((error) => {
@@ -56,9 +53,10 @@ export class UsersService {
       });
   }
 
-  addUserdata(value: any) {
+  addUserdata(value: any) : object {
     const dbInstance = collection(this.firestore, 'Users');
-    addDoc(dbInstance, value).then(() => {
+    return addDoc(dbInstance, value).then((resp) => {
+        console.log("adduserResponse",resp)
         this.SendVerificationMail();
       })
       .catch((err) => {
@@ -66,7 +64,7 @@ export class UsersService {
       });
   }
   
-  Login(formvalues: any) {
+  Login(formvalues: any) : any {
     const { email: userEmail, password: userPassword } =  Object.assign(formvalues);
     return this._angularFireAuth.signInWithEmailAndPassword(userEmail, userPassword)
       .then((resp) => {

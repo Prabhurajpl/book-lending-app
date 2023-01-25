@@ -22,7 +22,7 @@ export class LibraryService {
     this.liblist = this.itemsCollection.snapshotChanges();
   }
 
-  addLibrary(item: any) {
+  addLibrary(item: any):any{
    return  this.itemsCollection.add(item);
   } 
 

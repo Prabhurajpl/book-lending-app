@@ -50,7 +50,7 @@ export class UserLoginComponent implements OnInit {
           this.userdataservice.userEmail$.next(resp[0].firstname)
        }
       })
-    }).catch(err =>{
+    }).catch((err :any) =>{
       throw new Error(err.messages)
     })
   }

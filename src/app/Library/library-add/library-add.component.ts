@@ -28,7 +28,7 @@ export class LibraryAddComponent implements OnInit,OnDestroy {
     let lib: Library = {libname: this.name , added_by:this.userId};
     this.libservice.addLibrary(lib).then(() => {
       this.getliblist();
-    }).catch((err) => {
+    }).catch((err :any) => {
        console.log("error",err.messages)
     });
     this.name = '';

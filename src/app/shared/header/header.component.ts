@@ -9,7 +9,7 @@ import { Subscription, BehaviorSubject, switchMap, Observable, first, take } fro
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderComponent implements OnInit {
   islogin_or_register: boolean = false;
   routepathsubscr!: Subscription;
   currentUrl: string = '';
@@ -42,9 +42,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
    
   
   }
-  ngOnDestroy(): void {
-    this.routepathsubscr.unsubscribe();
-  }
+  // ngOnDestroy(): void {
+  //   this.routepathsubscr.unsubscribe();
+  // }
   Logout() {
     this.islogin_or_register = false;
     this.router.navigateByUrl('login');
